@@ -1,0 +1,80 @@
+package dev.alchemyredirected.Incridients;
+
+import dev.alchemyredirected.recipie.RecipeManager;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class IngredientLoader {
+
+    private final JavaPlugin plugin;
+
+    public IngredientLoader(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public void loadAll() {
+        File file = new File(plugin.getDataFolder(), "ingredients.yml");
+        if (!file.exists()) {
+            plugin.saveResource("ingredients.yml", false); // copies from src/main/resources if bundled
+        }
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection section = config.getConfigurationSection("ingredients");
+
+        if (section == null) {
+            plugin.getLogger().warning("No 'ingredients' section found in ingredients.yml");
+            return;
+        }
+
+        for (String key : section.getKeys(false)) {
+            Material material = Material.matchMaterial(key);
+            if (material == null) {
+                plugin.getLogger().warning("Unknown material in ingredients.yml: " + key);
+                continue;
+            }
+
+            ConfigurationSection entry = section.getConfigurationSection(key);
+            int toxicity = entry.getInt("toxicity");
+            int loreLevel = entry.getInt("loreLevel");
+            double exp =  entry.getDouble("exp");
+            double synergyExp =  entry.getDouble("synergyExp");
+
+
+            List<IngredientEffect> effects = new ArrayList<>();
+            List<Map<?, ?>> effectMaps = entry.getMapList("effects");
+
+            for (Map<?, ?> effectMap : effectMaps) {
+                String typeName = (String) effectMap.get("type");
+                PotionEffectType effectType = PotionEffectType.getByName(typeName);
+
+                if (effectType == null) {
+                    plugin.getLogger().warning("Unknown effect type '" + typeName + "' for ingredient " + key);
+                    continue;
+                }
+
+                int value = (int) effectMap.get("value");
+                int max = (int) effectMap.get("max");
+
+
+                effects.add(new IngredientEffect(effectType, value, max));
+            }
+
+            register(material, toxicity, loreLevel, effects.toArray(new IngredientEffect[0]),exp,synergyExp);
+        }
+
+        plugin.getLogger().info("Loaded " + section.getKeys(false).size() + " ingredients from config.");
+    }
+
+    private void register(Material material, int toxicity, int loreLevel, IngredientEffect[] effects,double exp,double synergyexp) {
+        RecipeManager.register(material,new Ingredient(material,effects,toxicity,loreLevel,exp,synergyexp));
+    }
+}

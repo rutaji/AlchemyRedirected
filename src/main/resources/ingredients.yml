@@ -1,0 +1,25 @@
+ingredients:
+  CARROT:
+    toxicity: 10
+    loreLevel: 3
+    exp: 6
+    synergyExp: 2.1
+    effects:
+      - type: NIGHT_VISION
+        value: 20
+        max: 1
+      - type: SATURATION
+        value: 9
+        max: 1
+  GOLDEN_CARROT:
+    toxicity: 12
+    loreLevel: 12
+    exp: 67
+    synergyExp: 6.6
+    effects:
+      - type: NIGHT_VISION
+        value: 40
+        max: 3
+      - type: SATURATION
+        value: 60
+        max: 2

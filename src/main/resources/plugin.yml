@@ -1,0 +1,11 @@
+name: AlchemyRedirected
+version: '${version}'
+main: dev.alchemyredirected.AlchemyRedirected
+api-version: '1.21'
+author: YourName
+description: An empty Paper plugin project.
+depend: [PlaceholderAPI,AuraSkills]
+commands:
+  Ingredients:
+    description: bruh
+    usage: /Ingredients
