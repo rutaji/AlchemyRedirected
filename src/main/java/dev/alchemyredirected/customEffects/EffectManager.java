@@ -24,7 +24,11 @@ public class EffectManager {
     }
 
     public static void setDuration(Player player,String effect,long duration){
-        HashMap<String,Long> playerEffects = effectPerPlayer.getOrDefault(player.getUniqueId(),new HashMap<>());
+        UUID uuid = player.getUniqueId();
+        if(!effectPerPlayer.containsKey(uuid)){
+            effectPerPlayer.put(uuid,new HashMap<>());
+        }
+        HashMap<String,Long> playerEffects = effectPerPlayer.get(uuid);
         long timestamp = playerEffects.getOrDefault(effect,-1L);
         long newTimestamp = player.getWorld().getFullTime() + duration;
         if(newTimestamp > timestamp){playerEffects.put(effect,newTimestamp);}

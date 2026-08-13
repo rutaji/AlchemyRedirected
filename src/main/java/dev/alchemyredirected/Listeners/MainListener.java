@@ -79,7 +79,7 @@ public class MainListener implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) return;
 
         //todo remove this
-        EffectManager.setDuration(event.getPlayer(),EffectManager.Lifesteal,20L*5);
+        EffectManager.setDuration(event.getPlayer(),EffectManager.Lifesteal,20L*50);
 
         Block block = event.getClickedBlock();
         if (!isCauldron(block)) return;
