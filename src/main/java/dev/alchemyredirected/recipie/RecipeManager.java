@@ -4,6 +4,7 @@ import dev.alchemyredirected.AlchemyRedirected;
 import dev.alchemyredirected.Incridients.Ingredient;
 import dev.alchemyredirected.PersistentData.TagHelper;
 import dev.alchemyredirected.aura.AuraUtil;
+import dev.alchemyredirected.customEffects.EffectType;
 import dev.alchemyredirected.helpers.ParticleUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -79,30 +80,23 @@ public class RecipeManager {
     public static ItemStack GetPotion(CraftingPotion potion){
         ItemStack result = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) result.getItemMeta();
+        List<Component> lore = new ArrayList<>();
 
         meta.setBasePotionType(PotionType.AWKWARD);
         meta.setColor(potion.GetColor());
 
-        for (Map.Entry<PotionEffectType, Integer> entry : potion.effects.entrySet()) {
-            PotionEffectType type = entry.getKey();
+        for (Map.Entry<EffectType, Integer> entry : potion.effects.entrySet()) {
+            EffectType type = entry.getKey();
             int level = entry.getValue();
-            int amplifier = level/STO-1; // convert level -> 0-indexed amplifier
+            int amplifier = level/STO-1; // convert amplifier -> 0-indexed amplifier
             if(amplifier < 0){continue;}
-                PotionEffect effect = new PotionEffect(
-                        type,
-                        20 * 60, // duration in ticks, e.g. 60 seconds — tune as needed
-                        amplifier,
-                        false,   // ambient (particles subtler if true)
-                        true,    // show particles
-                        true     // show icon
-                );
-                meta.addCustomEffect(effect, true); // true = overwrite existing effect of same type
+            type.applyPotion(meta,lore,amplifier);
         }
         // Store toxicity as PDC
         TagHelper.setToxicity(meta, potion.getToxic());
 
         // Display toxicity in lore
-        List<Component> lore = new ArrayList<>();
+
         lore.add(Component.text("Toxicity: " + potion.getToxic(), NamedTextColor.DARK_GREEN)
                 .decoration(TextDecoration.ITALIC, false));
         meta.lore(lore);
@@ -111,8 +105,8 @@ public class RecipeManager {
         return result;
     }
     public static void Print(CraftingPotion potion){
-        for (Map.Entry<PotionEffectType, Integer> entry : potion.effects.entrySet()) {
-            AlchemyRedirected.getPlugin(AlchemyRedirected.class).getLogger().info(entry.getKey().getKey() + " -> level " + entry.getValue());
+        for (Map.Entry<EffectType, Integer> entry : potion.effects.entrySet()) {
+            AlchemyRedirected.getPlugin(AlchemyRedirected.class).getLogger().info(entry.getKey().getId() + " -> amplifier " + entry.getValue());
         }
 
     }

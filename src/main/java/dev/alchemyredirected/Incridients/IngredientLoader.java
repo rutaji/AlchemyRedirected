@@ -1,17 +1,23 @@
 package dev.alchemyredirected.Incridients;
 
+import dev.alchemyredirected.customEffects.CustomEffectType;
+import dev.alchemyredirected.customEffects.EffectType;
+import dev.alchemyredirected.customEffects.InstantEffectType;
+import dev.alchemyredirected.customEffects.VanillaEffectType;
 import dev.alchemyredirected.recipie.RecipeManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class IngredientLoader {
 
@@ -54,8 +60,8 @@ public class IngredientLoader {
 
             for (Map<?, ?> effectMap : effectMaps) {
                 String typeName = (String) effectMap.get("type");
-                PotionEffectType effectType = PotionEffectType.getByName(typeName);
 
+                EffectType effectType = EffectFromString(typeName);
                 if (effectType == null) {
                     plugin.getLogger().warning("Unknown effect type '" + typeName + "' for ingredient " + key);
                     continue;
@@ -77,4 +83,19 @@ public class IngredientLoader {
     private void register(Material material, int toxicity, int loreLevel, IngredientEffect[] effects,double exp,double synergyexp) {
         RecipeManager.register(material,new Ingredient(material,effects,toxicity,loreLevel,exp,synergyexp));
     }
+
+    private EffectType EffectFromString(String name){
+        Optional<CustomEffectType> result = CustomEffectType.fromId(name);
+        if(result.isPresent()){
+            return result.get();
+        }
+        Optional<InstantEffectType> instant = InstantEffectType.fromId(name);
+        if(instant.isPresent()){
+            return instant.get();
+        }
+        PotionEffectType vanila = PotionEffectType.getByName(name);
+        if(vanila == null){return null;}
+        return new VanillaEffectType(vanila);
+    }
+
 }

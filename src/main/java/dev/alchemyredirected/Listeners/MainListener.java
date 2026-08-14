@@ -78,8 +78,6 @@ public class MainListener implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getHand() != EquipmentSlot.HAND) return;
 
-        //todo remove this
-        EffectManager.setDuration(event.getPlayer(),EffectManager.Lifesteal,20L*50);
 
         Block block = event.getClickedBlock();
         if (!isCauldron(block)) return;
@@ -94,16 +92,15 @@ public class MainListener implements Listener {
     }
     @EventHandler
     public void onPotionDrink(PlayerItemConsumeEvent event) {
-        AlchemyRedirected.instance.getLogger().info("drink");
         ItemStack item = event.getItem();
 
         if (item.getType() != Material.POTION) return;
-        AlchemyRedirected.instance.getLogger().info("potion");
         Optional<Integer> toxic = TagHelper.getToxicity(item);
         if(toxic.isEmpty()){return;}
-        AlchemyRedirected.instance.getLogger().info("toxic");
         Player player = event.getPlayer();
         ToxicityManager.add(player,toxic.get());
+        EffectManager.drink(player,item);
+        EffectManager.applyInstant(player,item);
     }
 
     @EventHandler

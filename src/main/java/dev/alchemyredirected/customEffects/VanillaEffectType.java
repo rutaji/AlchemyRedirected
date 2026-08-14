@@ -2,7 +2,11 @@ package dev.alchemyredirected.customEffects;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
 
 public class VanillaEffectType implements EffectType {
     private final PotionEffectType potionEffectType;
@@ -33,5 +37,18 @@ public class VanillaEffectType implements EffectType {
     @Override
     public PotionEffectType.Category getEffectCategory() {
         return potionEffectType.getEffectCategory();
+    }
+
+    @Override
+    public void applyPotion(PotionMeta meta, List<Component> lore, int amplifier) {
+        PotionEffect effect = new PotionEffect(
+                potionEffectType,
+                20 * 60, // duration in ticks, e.g. 60 seconds — tune as needed
+                amplifier,
+                false,   // ambient (particles subtler if true)
+                true,    // show particles
+                true     // show icon
+        );
+        meta.addCustomEffect(effect, true); // true = overwrite existing effect of same type
     }
 }

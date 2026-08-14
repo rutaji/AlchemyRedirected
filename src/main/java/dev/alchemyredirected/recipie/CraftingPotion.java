@@ -1,6 +1,7 @@
 package dev.alchemyredirected.recipie;
 
 import dev.alchemyredirected.AlchemyRedirected;
+import dev.alchemyredirected.customEffects.EffectType;
 import org.bukkit.Color;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import static dev.alchemyredirected.Incridients.Ingredient.STO;
 
 public class CraftingPotion {
-    public HashMap<PotionEffectType, Integer> effects = new HashMap<>();
+    public HashMap<EffectType, Integer> effects = new HashMap<>();
 
     private int toxicity = 0;
 
@@ -23,7 +24,7 @@ public class CraftingPotion {
 
     public int getMax(){
         int max = 0;
-        for( Map.Entry<PotionEffectType, Integer> entry : effects.entrySet()){
+        for( Map.Entry<EffectType, Integer> entry : effects.entrySet()){
             if(entry.getValue() > max){
                 max = entry.getValue();
             }
@@ -32,7 +33,7 @@ public class CraftingPotion {
     }
     List<Integer> GetTop4(){
         return effects.entrySet().stream()
-                .sorted(Map.Entry.<PotionEffectType, Integer>comparingByValue().reversed())
+                .sorted(Map.Entry.<EffectType, Integer>comparingByValue().reversed())
                 .limit(4)
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
@@ -42,7 +43,7 @@ public class CraftingPotion {
     public Color GetColor(){
         int totalR = 0, totalG = 0, totalB = 0;
         int level = 0;
-        for(Map.Entry<PotionEffectType, Integer> effect : effects.entrySet()){
+        for(Map.Entry<EffectType, Integer> effect : effects.entrySet()){
             Color c = effect.getKey().getColor();
             int currentLevel = effect.getValue();
             totalR += c.getRed() * currentLevel;

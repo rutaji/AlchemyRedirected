@@ -23,3 +23,24 @@ ingredients:
       - type: SATURATION
         value: 60
         max: 2
+  POTATO:
+    toxicity: 30
+    loreLevel: 1
+    exp: 67
+    synergyExp: 6.6
+    effects:
+      - type: LIFESTEAL
+        value: 60
+        max: 3
+      - type: SATURATION
+        value: 60
+        max: 2
+  COAL:
+    toxicity: 30
+    loreLevel: 1
+    exp: 67
+    synergyExp: 6.6
+    effects:
+      - type: SMOKE
+        value: 50
+        max: 7

@@ -1,43 +1,75 @@
 package dev.alchemyredirected.customEffects;
 
+import dev.alchemyredirected.PersistentData.TagHelper;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class EffectManager {
-    public static String Lifesteal = "Lifesteal";
 
-    static HashMap<UUID,HashMap<String ,Long>> effectPerPlayer = new HashMap<>();
+    static HashMap<UUID,HashMap<EffectType ,EffectValues>> effectPerPlayer = new HashMap<>();
 
-    public static long getDuration(Player player,String effect){
-        HashMap<String,Long> playerEffects = effectPerPlayer.get(player.getUniqueId());
+    public static long getDuration(Player player,EffectType effect){
+        HashMap<EffectType ,EffectValues> playerEffects = effectPerPlayer.get(player.getUniqueId());
         if(playerEffects == null){return 0;}
-        long timestamp = playerEffects.getOrDefault(effect,-1L);
-        if(timestamp == -1){return 0;}
-        long duration = timestamp - player.getWorld().getFullTime();
+        EffectValues values = playerEffects.get(effect);
+        if(values == null){return 0;}
+        long duration = values.timestamp() - player.getWorld().getFullTime();
         if(duration < 0){
             playerEffects.remove(effect);
             return 0L;
         }
         return duration;
     }
+    public static EffectValues getEffect(Player player,EffectType effect){
+        HashMap<EffectType ,EffectValues> playerEffects = effectPerPlayer.get(player.getUniqueId());
+        if(playerEffects == null){return null;}
+        EffectValues values = playerEffects.get(effect);
+        if(values == null){return null;}
+        long duration = values.timestamp() - player.getWorld().getFullTime();
+        if(duration < 0){
+            playerEffects.remove(effect);
+            return null;
+        }
+        return values;
+    }
 
-    public static void setDuration(Player player,String effect,long duration){
+    public static void setDuration(Player player,EffectType effect,long duration,int amplifier){
         UUID uuid = player.getUniqueId();
         if(!effectPerPlayer.containsKey(uuid)){
             effectPerPlayer.put(uuid,new HashMap<>());
         }
-        HashMap<String,Long> playerEffects = effectPerPlayer.get(uuid);
-        long timestamp = playerEffects.getOrDefault(effect,-1L);
+        HashMap<EffectType ,EffectValues> playerEffects = effectPerPlayer.get(uuid);
+        EffectValues values = playerEffects.get(effect);
         long newTimestamp = player.getWorld().getFullTime() + duration;
-        if(newTimestamp > timestamp){playerEffects.put(effect,newTimestamp);}
-
+        if(values == null || values.amplifier() < amplifier || values.timestamp() <  newTimestamp){
+            playerEffects.put(effect, new EffectValues(newTimestamp,amplifier));
+        }
     }
-    public static void deleteEffects(Player player,String effect){
-        HashMap<String,Long> playerEffects = effectPerPlayer.get(player.getUniqueId());
+    public static void deleteEffects(Player player,EffectType effect){
+        HashMap<EffectType ,EffectValues> playerEffects = effectPerPlayer.get(player.getUniqueId());
         if(playerEffects == null){return;}
         playerEffects.remove(effect);
     }
 
+    public static void drink(Player player, ItemStack item) {
+        PotionMeta meta = (PotionMeta) item.getItemMeta();
+        List<CustomEffect<CustomEffectType>> effects = TagHelper.LoadCustomEffects(meta);
+        for(CustomEffect effect : effects){
+            setDuration(player,effect.effect(),20L*4*60, effect.amplifier());
+        }
+    }
+
+    public static void applyInstant(Player player, ItemStack item)
+    {
+        PotionMeta meta = (PotionMeta) item.getItemMeta();
+        List<CustomEffect<InstantEffectType>> effects = TagHelper.LoadCustomEffectsInstant(meta);
+        for(CustomEffect<InstantEffectType> effect : effects){
+            effect.effect().applyInstant(player, effect.amplifier());
+        }
+    }
 }

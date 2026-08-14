@@ -25,7 +25,7 @@ public class LoreManager {
     }
     public static List<Component> getLore(Ingredient ingredient,List<Component> lore){
         for(IngredientEffect effect : ingredient.effects){
-            lore.add(Component.translatable(effect.effect().translationKey())
+            lore.add(effect.effect().getDisplayName()
                     .append(Component.text(": " + effect.value()))
                     .append(Component.text("    max: " + effect.max()))
                     .color(NamedTextColor.GRAY)
