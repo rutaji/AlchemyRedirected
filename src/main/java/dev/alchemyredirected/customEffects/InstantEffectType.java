@@ -71,7 +71,7 @@ public enum InstantEffectType implements EffectType {
     }
 
     public void applyInstant(Player player, int amplifier) {
-
+        player.sendMessage("dev forgot to override");
     }
 
     public static Optional<InstantEffectType> fromId(String id) {

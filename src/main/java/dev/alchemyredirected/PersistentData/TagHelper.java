@@ -21,10 +21,13 @@ public class TagHelper {
     public static  final NamespacedKey EFFECTS_ARRAY_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffects");
     public static  final NamespacedKey EFFECT_ID_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsID");
     public static  final NamespacedKey EFFECT_VALUE_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsKey");
+    public static  final NamespacedKey EFFECT_DURATION_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsKey");
 
-    public static  final NamespacedKey INSTANT_ARRAY_KEY =  new NamespacedKey(AlchemyRedirected.instance, "instantEffects");
+    public static final NamespacedKey INSTANT_ARRAY_KEY =  new NamespacedKey(AlchemyRedirected.instance, "instantEffects");
     public static  final NamespacedKey INSTANT_ID_KEY =  new NamespacedKey(AlchemyRedirected.instance, "instantEffectsID");
     public static  final NamespacedKey INSTANT_VALUE_KEY =  new NamespacedKey(AlchemyRedirected.instance, "instantEffectsKey");
+
+    public static final NamespacedKey INGREDIENT_LORE_KEY = new NamespacedKey(AlchemyRedirected.instance, "ingredientLore");
 
     public static void setToxicity(PotionMeta potion, int toxicity) {
         potion.getPersistentDataContainer().set(TOXICITY_KEY, PersistentDataType.INTEGER, toxicity);
@@ -37,7 +40,7 @@ public class TagHelper {
         AlchemyRedirected.instance.getLogger().info(value + "");
         return Optional.ofNullable(value);
     }
-    public  static void AddCustomEffect(PotionMeta meta,String id,int amplifier) {
+    public  static void AddCustomEffect(PotionMeta meta,String id,int amplifier,int duration) {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         PersistentDataAdapterContext context = container.getAdapterContext();
@@ -52,6 +55,7 @@ public class TagHelper {
         PersistentDataContainer entry = context.newPersistentDataContainer();
         entry.set(EFFECT_ID_KEY, PersistentDataType.STRING, id);
         entry.set(EFFECT_VALUE_KEY, PersistentDataType.INTEGER, amplifier);
+        entry.set(EFFECT_DURATION_KEY, PersistentDataType.INTEGER,duration);
         existing.add(entry);
 
 
@@ -69,11 +73,12 @@ public class TagHelper {
         for (PersistentDataContainer entry : effectList) {
             String id = entry.get(EFFECT_ID_KEY, PersistentDataType.STRING);
             Integer amplifier = entry.get(EFFECT_VALUE_KEY, PersistentDataType.INTEGER);
+            Integer duration = entry.get(EFFECT_DURATION_KEY,PersistentDataType.INTEGER);
             Optional<CustomEffectType> effect = CustomEffectType.fromId(id);
-            if (effect.isEmpty()  || amplifier == null) {
+            if (effect.isEmpty()  || amplifier == null || duration == null) {
                 continue;
             }
-                result.add(new CustomEffect<>(effect.get(), amplifier));
+                result.add(new CustomEffect<>(effect.get(), amplifier,duration));
         }
         return result;
     }
@@ -114,7 +119,7 @@ public class TagHelper {
             if (effect.isEmpty()  || amplifier == null) {
                 continue;
             }
-            result.add(new CustomEffect<>(effect.get(), amplifier));
+            result.add(new CustomEffect<>(effect.get(), amplifier,0));
         }
         return result;
     }

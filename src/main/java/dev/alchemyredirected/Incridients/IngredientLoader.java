@@ -1,6 +1,7 @@
 package dev.alchemyredirected.Incridients;
 
 import dev.alchemyredirected.customEffects.CustomEffectType;
+import dev.alchemyredirected.customEffects.EffectManager;
 import dev.alchemyredirected.customEffects.EffectType;
 import dev.alchemyredirected.customEffects.InstantEffectType;
 import dev.alchemyredirected.customEffects.VanillaEffectType;
@@ -10,7 +11,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
@@ -34,6 +34,12 @@ public class IngredientLoader {
         }
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        EffectManager.BASE_DURATION = config.getInt("baseDuration", EffectManager.BASE_DURATION);
+        EffectManager.LEVEL_DURATION = config.getInt("levelDuration", EffectManager.LEVEL_DURATION);
+        EffectManager.LEVEL_DURATION_UNAFFECTED_BY_LEVELS = config.getInt("levelDurationUnaffectedByLevels", EffectManager.LEVEL_DURATION_UNAFFECTED_BY_LEVELS);
+        RecipeManager.MAXTOXICITY = config.getInt("maxToxicity", RecipeManager.MAXTOXICITY);
+
         ConfigurationSection section = config.getConfigurationSection("ingredients");
 
         if (section == null) {

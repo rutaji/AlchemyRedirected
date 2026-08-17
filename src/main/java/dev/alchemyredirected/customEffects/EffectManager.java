@@ -11,6 +11,10 @@ import java.util.UUID;
 
 public class EffectManager {
 
+    public static int BASE_DURATION = 20*60*3;
+    public static int LEVEL_DURATION = 20*30;
+    public static int LEVEL_DURATION_UNAFFECTED_BY_LEVELS = 20*60*2;
+
     static HashMap<UUID,HashMap<EffectType ,EffectValues>> effectPerPlayer = new HashMap<>();
 
     public static long getDuration(Player player,EffectType effect){
@@ -59,8 +63,8 @@ public class EffectManager {
     public static void drink(Player player, ItemStack item) {
         PotionMeta meta = (PotionMeta) item.getItemMeta();
         List<CustomEffect<CustomEffectType>> effects = TagHelper.LoadCustomEffects(meta);
-        for(CustomEffect effect : effects){
-            setDuration(player,effect.effect(),20L*4*60, effect.amplifier());
+        for(CustomEffect<CustomEffectType> effect : effects){
+            setDuration(player,effect.effect(),effect.duration(), effect.amplifier());
         }
     }
 

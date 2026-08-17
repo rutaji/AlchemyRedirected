@@ -105,7 +105,7 @@ public class MainListener implements Listener {
 
     @EventHandler
     public void onItemPickup(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return; // only players, not e.g. villagers/foxes picking up items
+        if (!(event.getEntity() instanceof Player player)) return;
 
         ItemStack stack =  event.getItem().getItemStack();
         Ingredient ingredient = RecipeManager.Convert(stack.getType());

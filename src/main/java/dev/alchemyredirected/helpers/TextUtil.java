@@ -21,6 +21,13 @@ public class TextUtil {
         return result.toString();
     }
 
+    public static String ticksToTime(int ticks) {
+        int totalSeconds = ticks / 20;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
     public static TextColor colorToTextColor(Color color) {
         return TextColor.color(color.asRGB());
     }

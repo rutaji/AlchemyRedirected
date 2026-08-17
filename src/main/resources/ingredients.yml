@@ -44,3 +44,6 @@ ingredients:
       - type: SMOKE
         value: 50
         max: 7
+baseDuration: 3600
+levelDuration: 600
+levelDurationUnaffectedByLevels: 2400

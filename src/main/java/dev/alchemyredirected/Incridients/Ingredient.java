@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Ingredient {
     public static final int STO = 100;
+    public static final double DISCOUNT_MODIFIER = 0.01;
 
     public final Material ingredient;
 
@@ -19,6 +20,7 @@ public class Ingredient {
     final int toxicity;
     public final double synergyExp;
     public final double exp;
+
 
     Ingredient(Material ingredient, IngredientEffect[] effects, int toxicity, int loreLevel,double exp,double synergyExp){
         this.ingredient = ingredient;
@@ -33,14 +35,16 @@ public class Ingredient {
         return toxicity;
     }
 
-    public void ApplyAll(CraftingPotion potion,int modifier){
+    public void ApplyAll(CraftingPotion potion,Player player){
         for(IngredientEffect effect : effects){
-            AddEffect(potion,effect,modifier);
+            AddEffect(potion,effect,1);
         }
-        aplytoxic(potion);
+        aplytoxic(potion,player);
     }
-    public void aplytoxic(CraftingPotion potion){
-        potion.setToxic(potion.getToxic() + getToxicity());
+    public void aplytoxic(CraftingPotion potion,Player player){
+        int level = AuraUtil.getAlchemyLevel(player);
+        int discountedToxicity = Math.max((int)(getToxicity() * (100 - level) * DISCOUNT_MODIFIER),1);
+        potion.setToxic(potion.getToxic() + discountedToxicity);
     }
 
     public boolean AddEffect(CraftingPotion potion,IngredientEffect effect,int modifier){
@@ -57,9 +61,4 @@ public class Ingredient {
         return AuraUtil.getAlchemyLevel(player) >= loreLevel;
     }
 
-
-    public boolean checkSynergy(List<Ingredient> ingredients) {
-        //todo
-        return false;
-    }
 }
