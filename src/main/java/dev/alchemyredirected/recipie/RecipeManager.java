@@ -4,6 +4,7 @@ import dev.alchemyredirected.AlchemyRedirected;
 import dev.alchemyredirected.Incridients.Ingredient;
 import dev.alchemyredirected.PersistentData.TagHelper;
 import dev.alchemyredirected.aura.AuraUtil;
+import dev.alchemyredirected.customEffects.EffectType;
 import dev.alchemyredirected.helpers.ParticleUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -26,10 +27,9 @@ public class RecipeManager {
     private static final Map<Material, Ingredient> ingredientsByMaterial = new HashMap<>();
     public static Map<Location, List<Ingredient>> cauldronContents = new HashMap<>();
     public static Map<Location, CraftingPotion> cauldronPotions = new HashMap<>();
-    public static final int SYNERGYMODIFIER = 2;
-    public static final int MAXTOXICITY = 100;
+    public static int MAXTOXICITY = 100;
 
-    public static final double DISCOUNT_MODIFIER = 1;
+
 
 
     public static boolean IsEmpty(Location location){
@@ -38,16 +38,11 @@ public class RecipeManager {
 
     public static void craft(Location location,Player player){
         CraftingPotion potion = cauldronPotions.get(location);
-        ToxicDiscount(player,potion);
         ItemStack itemStack = GetPotion(potion);
         player.give(itemStack);
         giveExp(cauldronContents.get(location),player,potion);
         EmptyOut(location);
-    }
-    public static void ToxicDiscount(Player player,CraftingPotion potion){
-        int level = AuraUtil.getAlchemyLevel(player);
-        int discount = (int)(potion.getToxic() *  0.01 * level * DISCOUNT_MODIFIER);
-        potion.setToxic(Math.min(potion.getToxic() - discount, 1));
+        ParticleUtil.synergy(location);
     }
     public static void giveExp(List<Ingredient> ingredients,Player player,CraftingPotion potion){
         Set<Ingredient> uniqueByReference = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -57,10 +52,10 @@ public class RecipeManager {
             penalty *= 0.25;
             player.sendMessage("exp reduced by 75% for zero effect potions");
         }
-        if(potion.getToxic() > MAXTOXICITY){
+        /*if(potion.getToxic() > MAXTOXICITY){
             penalty *= 0.5;
             player.sendMessage("exp reduced by 50% for high toxicity");
-        }
+        }*/
         double exp = 0;
         for(Ingredient ingredient : uniqueByReference){
             exp += ingredient.exp;
@@ -79,30 +74,23 @@ public class RecipeManager {
     public static ItemStack GetPotion(CraftingPotion potion){
         ItemStack result = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) result.getItemMeta();
+        List<Component> lore = new ArrayList<>();
 
         meta.setBasePotionType(PotionType.AWKWARD);
         meta.setColor(potion.GetColor());
 
-        for (Map.Entry<PotionEffectType, Integer> entry : potion.effects.entrySet()) {
-            PotionEffectType type = entry.getKey();
+        for (Map.Entry<EffectType, Integer> entry : potion.effects.entrySet()) {
+            EffectType type = entry.getKey();
             int level = entry.getValue();
-            int amplifier = level/STO-1; // convert level -> 0-indexed amplifier
+            int amplifier = level/STO-1; // convert amplifier -> 0-indexed amplifier
             if(amplifier < 0){continue;}
-                PotionEffect effect = new PotionEffect(
-                        type,
-                        20 * 60, // duration in ticks, e.g. 60 seconds — tune as needed
-                        amplifier,
-                        false,   // ambient (particles subtler if true)
-                        true,    // show particles
-                        true     // show icon
-                );
-                meta.addCustomEffect(effect, true); // true = overwrite existing effect of same type
+            type.applyPotion(meta,lore,amplifier);
         }
         // Store toxicity as PDC
         TagHelper.setToxicity(meta, potion.getToxic());
 
         // Display toxicity in lore
-        List<Component> lore = new ArrayList<>();
+
         lore.add(Component.text("Toxicity: " + potion.getToxic(), NamedTextColor.DARK_GREEN)
                 .decoration(TextDecoration.ITALIC, false));
         meta.lore(lore);
@@ -111,8 +99,8 @@ public class RecipeManager {
         return result;
     }
     public static void Print(CraftingPotion potion){
-        for (Map.Entry<PotionEffectType, Integer> entry : potion.effects.entrySet()) {
-            AlchemyRedirected.getPlugin(AlchemyRedirected.class).getLogger().info(entry.getKey().getKey() + " -> level " + entry.getValue());
+        for (Map.Entry<EffectType, Integer> entry : potion.effects.entrySet()) {
+            AlchemyRedirected.getPlugin(AlchemyRedirected.class).getLogger().info(entry.getKey().getId() + " -> amplifier " + entry.getValue());
         }
 
     }
@@ -126,19 +114,16 @@ public class RecipeManager {
             cauldronPotions.put(location,new CraftingPotion());
         }
         cauldronContents.get(location).add(ingredient);
-        boolean Synergy = ingredient.checkSynergy(cauldronContents.get(location));
-        if(Synergy){
-            ParticleUtil.synergy(location.clone().add(0.5,1,0.5));
-            AuraUtil.GiveAlchemyEXP(player,ingredient.synergyExp);
-        }
         CraftingPotion potion = cauldronPotions.get(location);
-        Apply(potion,ingredient,Synergy);
+        Apply(potion,ingredient,player);
+        if(potion.getToxic() >= MAXTOXICITY){
+            player.sendMessage("Max toxicity reached");
+            craft(location,player);
+        }
         DisplayManager.Update(location, potion,player);
     }
-    public static void Apply(CraftingPotion potion,Ingredient ingredient,boolean Synergy){
-        int modifier = 1;
-        if(Synergy){modifier = SYNERGYMODIFIER;}
-        ingredient.ApplyAll(potion,modifier);
+    public static void Apply(CraftingPotion potion,Ingredient ingredient,Player player){
+        ingredient.ApplyAll(potion,player);
         Print(potion);
     }
 

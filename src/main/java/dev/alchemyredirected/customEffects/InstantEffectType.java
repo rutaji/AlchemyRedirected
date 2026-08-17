@@ -1,34 +1,43 @@
 package dev.alchemyredirected.customEffects;
 
 import dev.alchemyredirected.PersistentData.TagHelper;
+import dev.alchemyredirected.helpers.ParticleUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Color;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
-import static dev.alchemyredirected.customEffects.EffectManager.*;
-import static dev.alchemyredirected.helpers.TextUtil.*;
+import static dev.alchemyredirected.helpers.TextUtil.colorToTextColor;
+import static dev.alchemyredirected.helpers.TextUtil.toRomanNumeral;
 
-public enum CustomEffectType implements EffectType {
-    LIFESTEAL("LIFESTEAL", Component.text("Lifesteal", NamedTextColor.RED),Color.RED,PotionEffectType.Category.BENEFICIAL,true);
+public enum InstantEffectType implements EffectType {
+    SMOKE("SMOKE", Component.text("Smoke", TextColor.color(64, 68, 63)), Color.BLACK, PotionEffectType.Category.NEUTRAL) {
+        @Override
+        public void applyInstant(Player player, int amplifier) {
+            for(int i = 0; i <= amplifier ; i++  ) {
+                ParticleUtil.smokeBomb(player.getLocation().clone().add(ThreadLocalRandom.current().nextDouble(-1.0,1.0),ThreadLocalRandom.current().nextDouble(-1.0,1.0),ThreadLocalRandom.current().nextDouble(-1.0,1.0)));
+            }
+        }
+    };
 
     private final String id;
     private final Component displayName;
     private final Color color;
     private final PotionEffectType.Category category;
-    private final boolean AffectedByLevels;
 
-    CustomEffectType(String id, Component displayName,Color color,PotionEffectType.Category category,boolean affectedByLevels) {
+    InstantEffectType(String id, Component displayName, Color color, PotionEffectType.Category category) {
         this.id = id;
         this.displayName = displayName;
         this.color = color;
         this.category = category;
-        this.AffectedByLevels = affectedByLevels;
     }
 
     @Override
@@ -53,31 +62,22 @@ public enum CustomEffectType implements EffectType {
 
     @Override
     public void applyPotion(PotionMeta meta, List<Component> lore, int amplifier) {
-        int bonusDuration;
-        if(!isAffectedByLevels()){
-            bonusDuration = LEVEL_DURATION_UNAFFECTED_BY_LEVELS * amplifier;
-            amplifier = 0;
-        }
-        else{
-            bonusDuration = LEVEL_DURATION * amplifier;
-        }
-
-        TagHelper.AddCustomEffect(meta,id,amplifier, BASE_DURATION + bonusDuration);
+        TagHelper.AddCustomEffectInstant(meta, id, amplifier);
         Component line = displayName
-                .append(Component.text(" " + toRomanNumeral(amplifier+1) + " ("  + ticksToTime(BASE_DURATION + bonusDuration) + ")"))
+                .append(Component.text(" " + toRomanNumeral(amplifier + 1)))
                 .color(displayName.color())
                 .decoration(TextDecoration.ITALIC, false);
         lore.add(line);
     }
-    public static Optional<CustomEffectType> fromId(String id) {
-        for (CustomEffectType type : CustomEffectType.values()) {
+
+    public void applyInstant(Player player, int amplifier) {
+        player.sendMessage("dev forgot to override");
+    }
+
+    public static Optional<InstantEffectType> fromId(String id) {
+        for (InstantEffectType type : values()) {
             if (type.getId().equals(id)) return Optional.of(type);
         }
         return Optional.empty();
     }
-
-    public boolean isAffectedByLevels(){
-        return AffectedByLevels;
-    }
-
 }

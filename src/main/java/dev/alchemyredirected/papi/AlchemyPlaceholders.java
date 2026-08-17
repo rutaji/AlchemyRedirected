@@ -1,5 +1,6 @@
 package dev.alchemyredirected.papi;
 
+import dev.alchemyredirected.customEffects.CustomEffectType;
 import dev.alchemyredirected.customEffects.EffectManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public class AlchemyPlaceholders extends PlaceholderExpansion {
         if (player == null) return "";
 
         if (params.equals("lifesteal_duration")) {
-            return  String.valueOf(EffectManager.getDuration(player,EffectManager.Lifesteal));
+            return  String.valueOf(EffectManager.getDuration(player, CustomEffectType.LIFESTEAL));
         }
 
         return null; // unknown placeholder
