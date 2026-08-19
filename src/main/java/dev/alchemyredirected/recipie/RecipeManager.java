@@ -119,6 +119,7 @@ public class RecipeManager {
         if(potion.getToxic() >= MAXTOXICITY){
             player.sendMessage("Max toxicity reached");
             craft(location,player);
+            return;
         }
         DisplayManager.Update(location, potion,player);
     }

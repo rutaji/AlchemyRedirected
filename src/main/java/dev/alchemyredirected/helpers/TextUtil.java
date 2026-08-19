@@ -5,7 +5,7 @@ import org.bukkit.Color;
 
 public class TextUtil {
     public static String toRomanNumeral(int i) {
-        if (i <= 0) {
+        if (i <= 1) { // level I is not written by vanilla effects
             return "";
         }
         StringBuilder result = new StringBuilder();

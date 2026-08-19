@@ -2,7 +2,7 @@ package dev.alchemyredirected.recipie;
 
 import dev.alchemyredirected.AlchemyRedirected;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Display;
@@ -13,6 +13,8 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static dev.alchemyredirected.recipie.RecipeManager.MAXTOXICITY;
 
 public class DisplayManager {
 
@@ -42,7 +44,7 @@ public class DisplayManager {
             fullText = fullText.append(Component.text(toLine(top4.get(i))));
         }
 
-        display.text(fullText);
+        display.text(fullText.color(toxicColor(potion.getToxic())));
 
         // Cancel any previously scheduled deletion for this location
         BukkitTask existingTask = deleteTasks.get(location);
@@ -57,6 +59,11 @@ public class DisplayManager {
                 20L * 30 // 30 seconds
         );
         deleteTasks.put(location, newTask);
+    }
+    public static TextColor toxicColor(int toxicity){
+        if(toxicity > MAXTOXICITY){return TextColor.color(0,255,0);}
+        int c = 255 - (int)(255.0/MAXTOXICITY * toxicity);
+        return TextColor.color(c,255,c);
     }
 
     public static void Delete(Location location){
