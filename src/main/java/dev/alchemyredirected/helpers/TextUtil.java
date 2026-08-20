@@ -20,8 +20,8 @@ public class TextUtil {
         }
         return result.toString();
     }
-
     public static String ticksToTime(int ticks) {
+        if(ticks == 0){return "0";}
         int totalSeconds = ticks / 20;
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;

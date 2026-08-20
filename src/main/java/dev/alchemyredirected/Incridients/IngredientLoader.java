@@ -1,5 +1,6 @@
 package dev.alchemyredirected.Incridients;
 
+import dev.alchemyredirected.customEffects.CustomEffectsCode;
 import dev.alchemyredirected.customEffects.CustomEffectType;
 import dev.alchemyredirected.customEffects.EffectManager;
 import dev.alchemyredirected.customEffects.EffectType;
@@ -39,6 +40,8 @@ public class IngredientLoader {
         EffectManager.LEVEL_DURATION = config.getInt("levelDuration", EffectManager.LEVEL_DURATION);
         EffectManager.LEVEL_DURATION_UNAFFECTED_BY_LEVELS = config.getInt("levelDurationUnaffectedByLevels", EffectManager.LEVEL_DURATION_UNAFFECTED_BY_LEVELS);
         RecipeManager.MAXTOXICITY = config.getInt("maxToxicity", RecipeManager.MAXTOXICITY);
+        CustomEffectsCode.LIFESTEAL_PER_LEVEL = config.getDouble("lifestealPerLevel", CustomEffectsCode.LIFESTEAL_PER_LEVEL);
+        CustomEffectsCode.BOMB_POWER_PER_LEVEL = (float) config.getDouble("bombPowerPerLevel", CustomEffectsCode.BOMB_POWER_PER_LEVEL);
 
         ConfigurationSection section = config.getConfigurationSection("ingredients");
 
@@ -58,7 +61,6 @@ public class IngredientLoader {
             int toxicity = entry.getInt("toxicity");
             int loreLevel = entry.getInt("loreLevel");
             double exp =  entry.getDouble("exp");
-            double synergyExp =  entry.getDouble("synergyExp");
 
 
             List<IngredientEffect> effects = new ArrayList<>();
@@ -80,14 +82,14 @@ public class IngredientLoader {
                 effects.add(new IngredientEffect(effectType, value, max));
             }
 
-            register(material, toxicity, loreLevel, effects.toArray(new IngredientEffect[0]),exp,synergyExp);
+            register(material, toxicity, loreLevel, effects.toArray(new IngredientEffect[0]),exp);
         }
 
         plugin.getLogger().info("Loaded " + section.getKeys(false).size() + " ingredients from config.");
     }
 
-    private void register(Material material, int toxicity, int loreLevel, IngredientEffect[] effects,double exp,double synergyexp) {
-        RecipeManager.register(material,new Ingredient(material,effects,toxicity,loreLevel,exp,synergyexp));
+    private void register(Material material, int toxicity, int loreLevel, IngredientEffect[] effects,double exp) {
+        RecipeManager.register(material,new Ingredient(material,effects,toxicity,loreLevel,exp));
     }
 
     private EffectType EffectFromString(String name){

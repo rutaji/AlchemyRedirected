@@ -11,11 +11,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 
 import java.util.*;
@@ -42,7 +41,8 @@ public class RecipeManager {
         player.give(itemStack);
         giveExp(cauldronContents.get(location),player,potion);
         EmptyOut(location);
-        ParticleUtil.synergy(location);
+        player.playSound(location, Sound.BLOCK_BREWING_STAND_BREW, 1.0f, 1.0f);
+        ParticleUtil.brew(location);
     }
     public static void giveExp(List<Ingredient> ingredients,Player player,CraftingPotion potion){
         Set<Ingredient> uniqueByReference = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -85,6 +85,7 @@ public class RecipeManager {
             int amplifier = level/STO-1; // convert amplifier -> 0-indexed amplifier
             if(amplifier < 0){continue;}
             type.applyPotion(meta,lore,amplifier);
+            AlchemyRedirected.Print("recipieManager" + amplifier);
         }
         // Store toxicity as PDC
         TagHelper.setToxicity(meta, potion.getToxic());
@@ -114,6 +115,7 @@ public class RecipeManager {
             cauldronPotions.put(location,new CraftingPotion());
         }
         cauldronContents.get(location).add(ingredient);
+        player.playSound(location, Sound.ENTITY_GENERIC_SPLASH, 1.0f, 1.0f);
         CraftingPotion potion = cauldronPotions.get(location);
         Apply(potion,ingredient,player);
         if(potion.getToxic() >= MAXTOXICITY){

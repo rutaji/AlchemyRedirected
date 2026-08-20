@@ -44,6 +44,17 @@ ingredients:
       - type: SMOKE
         value: 50
         max: 7
+  GUNPOWDER:
+    toxicity: 12
+    loreLevel: 1
+    exp: 23
+    synergyExp: 6.6
+    effects:
+      - type: BOMB
+        value: 50
+        max: 7
 baseDuration: 3600
 levelDuration: 600
 levelDurationUnaffectedByLevels: 2400
+lifestealPerLevel: 0.1
+bombPowerPerLevel: 3.0

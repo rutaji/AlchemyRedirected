@@ -29,7 +29,7 @@ public class ToxicityManager {
         if(amount > 100){
             player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,20*60*3,2));
         }
-        if(amount > 200){
+        if(amount >= 200){
             toxicityDeaths.add(player.getUniqueId());
             player.kill();
         }
@@ -37,5 +37,8 @@ public class ToxicityManager {
 
     public static void reset(Player player) {
         ToxicityPerPlayer.put(player.getUniqueId(),0);
+    }
+    public static int get(Player player){
+        return ToxicityPerPlayer.getOrDefault(player.getUniqueId(),0);
     }
 }

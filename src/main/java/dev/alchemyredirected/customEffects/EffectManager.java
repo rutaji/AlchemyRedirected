@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static dev.alchemyredirected.AlchemyRedirected.Print;
+
 public class EffectManager {
 
     public static int BASE_DURATION = 20*60*3;
@@ -51,13 +53,31 @@ public class EffectManager {
         EffectValues values = playerEffects.get(effect);
         long newTimestamp = player.getWorld().getFullTime() + duration;
         if(values == null || values.amplifier() < amplifier || values.timestamp() <  newTimestamp){
-            playerEffects.put(effect, new EffectValues(newTimestamp,amplifier));
+            playerEffects.put(effect, new EffectValues(newTimestamp,amplifier));//todo tohle null checking by mohlo bejt lepší
+            if(effect instanceof  CustomEffectType customEffectType){
+                customEffectType.Start(player,amplifier,duration);
+            }
         }
     }
-    public static void deleteEffects(Player player,EffectType effect){
+    public static void deleteEffect(Player player,EffectType effect){
         HashMap<EffectType ,EffectValues> playerEffects = effectPerPlayer.get(player.getUniqueId());
         if(playerEffects == null){return;}
-        playerEffects.remove(effect);
+        EffectValues values = playerEffects.remove(effect);
+        if(effect instanceof  CustomEffectType customEffectType){
+            customEffectType.Cleared(player,values.amplifier());
+        }
+
+    }
+    public static void deleteEffects(Player player){
+        HashMap<EffectType, EffectValues> playerEffects = effectPerPlayer.remove(player.getUniqueId());
+        if(playerEffects == null){return;}
+        for(var entry : playerEffects.entrySet()){
+            EffectType effect = entry.getKey();
+            EffectValues values = entry.getValue();
+            if(effect instanceof CustomEffectType customEffectType){
+                customEffectType.Cleared(player, values.amplifier());
+            }
+        }
     }
 
     public static void drink(Player player, ItemStack item) {
@@ -65,6 +85,7 @@ public class EffectManager {
         List<CustomEffect<CustomEffectType>> effects = TagHelper.LoadCustomEffects(meta);
         for(CustomEffect<CustomEffectType> effect : effects){
             setDuration(player,effect.effect(),effect.duration(), effect.amplifier());
+            Print("drink" + effect.amplifier());
         }
     }
 

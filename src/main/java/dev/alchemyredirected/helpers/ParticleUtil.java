@@ -10,7 +10,7 @@ public class ParticleUtil {
     public static void splash(Location location){
         location.getWorld().spawnParticle(Particle.SPLASH, location, 6, 0.4, 0.4, 0.4);
     }
-    public static void synergy(Location location){
+    public static void brew(Location location){
         location.getWorld().spawnParticle(Particle.ENTITY_EFFECT, location, 20, 0.4, 0.4, 0.4, 1, Color.fromRGB(250, 250, 60));
     }
     public static void smokeBomb(Location location){

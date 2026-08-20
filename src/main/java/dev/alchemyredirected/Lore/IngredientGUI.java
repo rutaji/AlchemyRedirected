@@ -27,7 +27,8 @@ public class IngredientGUI implements Listener {
     public void open(Player player, List<Ingredient> allIngredients) {
         int size = ((allIngredients.size() - 1) / 9 + 1) * 9; // round up to nearest multiple of 9
         Inventory gui = Bukkit.createInventory(null, size, Component.text(GUI_TITLE));
-        for (Ingredient ingredient : allIngredients) {
+        for (int i = 0; i < allIngredients.size(); i++) {
+            Ingredient ingredient = allIngredients.get(i);
             boolean unlocked = ingredient.IsUnlocked(player);
             ItemStack display;
 
@@ -53,7 +54,7 @@ public class IngredientGUI implements Listener {
                 display.setItemMeta(meta);
             }
 
-            gui.addItem(display);
+            gui.setItem(i, display);
         }
 
         player.openInventory(gui);

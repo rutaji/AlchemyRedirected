@@ -20,8 +20,8 @@ public class TagHelper {
 
     public static  final NamespacedKey EFFECTS_ARRAY_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffects");
     public static  final NamespacedKey EFFECT_ID_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsID");
-    public static  final NamespacedKey EFFECT_VALUE_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsKey");
-    public static  final NamespacedKey EFFECT_DURATION_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsKey");
+    public static  final NamespacedKey EFFECT_VALUE_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsValue");
+    public static  final NamespacedKey EFFECT_DURATION_KEY =  new NamespacedKey(AlchemyRedirected.instance, "customEffectsDuration");
 
     public static final NamespacedKey INSTANT_ARRAY_KEY =  new NamespacedKey(AlchemyRedirected.instance, "instantEffects");
     public static  final NamespacedKey INSTANT_ID_KEY =  new NamespacedKey(AlchemyRedirected.instance, "instantEffectsID");

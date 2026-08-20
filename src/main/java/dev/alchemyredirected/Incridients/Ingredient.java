@@ -18,16 +18,14 @@ public class Ingredient {
     public final int loreLevel;
 
     final int toxicity;
-    public final double synergyExp;
     public final double exp;
 
 
-    Ingredient(Material ingredient, IngredientEffect[] effects, int toxicity, int loreLevel,double exp,double synergyExp){
+    Ingredient(Material ingredient, IngredientEffect[] effects, int toxicity, int loreLevel,double exp){
         this.ingredient = ingredient;
         this.effects = effects;
         this.toxicity = toxicity;
         this.loreLevel = loreLevel;
-        this.synergyExp = synergyExp;
         this.exp = exp;
     }
 

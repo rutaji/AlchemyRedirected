@@ -36,6 +36,9 @@ public final class AlchemyRedirected extends JavaPlugin {
             command.setExecutor(executor);
         }
     }
+    public static void Print(String text){
+        instance.getLogger().info(text);
+    }
 
 
     @Override

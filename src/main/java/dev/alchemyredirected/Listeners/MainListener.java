@@ -5,7 +5,10 @@ import dev.alchemyredirected.Incridients.Ingredient;
 import dev.alchemyredirected.Lore.LoreManager;
 import dev.alchemyredirected.PersistentData.TagHelper;
 import dev.alchemyredirected.Toxicity.ToxicityManager;
+import dev.alchemyredirected.customEffects.CustomEffectType;
+import dev.alchemyredirected.customEffects.CustomEffectsCode;
 import dev.alchemyredirected.customEffects.EffectManager;
+import dev.alchemyredirected.customEffects.EffectValues;
 import dev.alchemyredirected.helpers.ParticleUtil;
 import dev.alchemyredirected.recipie.DisplayManager;
 import dev.alchemyredirected.recipie.RecipeManager;
@@ -16,10 +19,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -118,9 +124,26 @@ public class MainListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         ToxicityManager.reset(player);
+        EffectManager.deleteEffects(player);
 
         if (toxicityDeaths.remove(player.getUniqueId())) {
             event.deathMessage(Component.text(player.getName() + " succumbed to intoxication.", NamedTextColor.DARK_GREEN));
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player player)) return;
+        CustomEffectsCode.lifesteal(event);
+
+    }
+
+    @EventHandler
+    public void onPotionEffectClear(EntityPotionEffectEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (event.getAction() == EntityPotionEffectEvent.Action.CLEARED) {
+            EffectManager.deleteEffects(player);
+            ToxicityManager.reset(player);
         }
     }
 
