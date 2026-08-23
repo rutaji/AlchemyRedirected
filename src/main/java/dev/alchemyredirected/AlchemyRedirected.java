@@ -4,6 +4,7 @@ import dev.alchemyredirected.Incridients.IngredientLoader;
 import dev.alchemyredirected.Listeners.MainListener;
 import dev.alchemyredirected.Lore.IngredientGUI;
 import dev.alchemyredirected.commands.MenuCommand;
+import dev.alchemyredirected.commands.ReloadCommand;
 import dev.alchemyredirected.papi.AlchemyPlaceholders;
 import dev.aurelium.auraskills.api.AuraSkillsApi;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +25,7 @@ public final class AlchemyRedirected extends JavaPlugin {
         getServer().getPluginManager().registerEvents(gui, this);
 
         registerCommand("Ingredients",new MenuCommand(gui));
+        registerCommand("alchemyredirected",new ReloadCommand());
 
         getLogger().info("Registering PAPI expansion...");
         boolean success = new AlchemyPlaceholders().register();
@@ -34,6 +36,9 @@ public final class AlchemyRedirected extends JavaPlugin {
         var command = getCommand(name);
         if (command != null) {
             command.setExecutor(executor);
+            if (executor instanceof org.bukkit.command.TabCompleter tabCompleter) {
+                command.setTabCompleter(tabCompleter);
+            }
         }
     }
     public static void Print(String text){

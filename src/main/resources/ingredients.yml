@@ -3,7 +3,6 @@ ingredients:
     toxicity: 10
     loreLevel: 3
     exp: 6
-    synergyExp: 2.1
     effects:
       - type: NIGHT_VISION
         value: 20
@@ -15,7 +14,6 @@ ingredients:
     toxicity: 12
     loreLevel: 12
     exp: 67
-    synergyExp: 6.6
     effects:
       - type: NIGHT_VISION
         value: 40
@@ -27,7 +25,6 @@ ingredients:
     toxicity: 30
     loreLevel: 1
     exp: 67
-    synergyExp: 6.6
     effects:
       - type: LIFESTEAL
         value: 60
@@ -39,7 +36,6 @@ ingredients:
     toxicity: 30
     loreLevel: 1
     exp: 67
-    synergyExp: 6.6
     effects:
       - type: SMOKE
         value: 50
@@ -48,7 +44,6 @@ ingredients:
     toxicity: 12
     loreLevel: 1
     exp: 23
-    synergyExp: 6.6
     effects:
       - type: BOMB
         value: 50
@@ -66,3 +61,5 @@ levelDuration: 600
 levelDurationUnaffectedByLevels: 2400
 lifestealPerLevel: 0.1
 bombPowerPerLevel: 3.0
+maxPotionToxicity: 100
+maxToxicity: 200

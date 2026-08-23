@@ -24,23 +24,26 @@ import static dev.alchemyredirected.Incridients.Ingredient.STO;
 public class RecipeManager {
 
     private static final Map<Material, Ingredient> ingredientsByMaterial = new HashMap<>();
-    public static Map<Location, List<Ingredient>> cauldronContents = new HashMap<>();
-    public static Map<Location, CraftingPotion> cauldronPotions = new HashMap<>();
-    public static int MAXTOXICITY = 100;
+    public static Map<Location, Map<UUID, List<Ingredient>>> cauldronContents = new HashMap<>();
+    public static Map<Location, Map<UUID, CraftingPotion>> cauldronPotions = new HashMap<>();
+    public static int MAXPOTIONTOXICITY = 100;
+    public static int MAXTOXICITY = 200;
 
 
 
-
-    public static boolean IsEmpty(Location location){
-        return !cauldronPotions.containsKey(location);
+    public static boolean IsEmpty(Location location, Player player){
+        return !cauldronPotions.getOrDefault(location, Collections.emptyMap()).containsKey(player.getUniqueId());
     }
 
     public static void craft(Location location,Player player){
-        CraftingPotion potion = cauldronPotions.get(location);
+        UUID uuid = player.getUniqueId();
+        CraftingPotion potion = cauldronPotions.getOrDefault(location, Collections.emptyMap()).get(uuid);
+        List<Ingredient> contents = cauldronContents.getOrDefault(location, Collections.emptyMap()).get(uuid);
+        if(potion == null || contents == null){return;}
         ItemStack itemStack = GetPotion(potion);
         player.give(itemStack);
-        giveExp(cauldronContents.get(location),player,potion);
-        EmptyOut(location);
+        giveExp(contents,player,potion);
+        EmptyOut(location,player);
         player.playSound(location, Sound.BLOCK_BREWING_STAND_BREW, 1.0f, 1.0f);
         ParticleUtil.brew(location);
     }
@@ -65,6 +68,10 @@ public class RecipeManager {
 
     public static void register(Material item,Ingredient ingredient){
         ingredientsByMaterial.put(item,ingredient);
+    }
+
+    public static void clearIngredients(){
+        ingredientsByMaterial.clear();
     }
 
     public static Ingredient Convert(Material item){
@@ -110,15 +117,15 @@ public class RecipeManager {
     }
 
     public static void throwIn(Location location, Ingredient ingredient, Player player){
-        if(!cauldronContents.containsKey(location)){
-            cauldronContents.put(location,new ArrayList<>());
-            cauldronPotions.put(location,new CraftingPotion());
-        }
-        cauldronContents.get(location).add(ingredient);
+        UUID uuid = player.getUniqueId();
+        cauldronContents.computeIfAbsent(location, k -> new HashMap<>())
+                .computeIfAbsent(uuid, k -> new ArrayList<>())
+                .add(ingredient);
+        CraftingPotion potion = cauldronPotions.computeIfAbsent(location, k -> new HashMap<>())
+                .computeIfAbsent(uuid, k -> new CraftingPotion());
         player.playSound(location, Sound.ENTITY_GENERIC_SPLASH, 1.0f, 1.0f);
-        CraftingPotion potion = cauldronPotions.get(location);
         Apply(potion,ingredient,player);
-        if(potion.getToxic() >= MAXTOXICITY){
+        if(potion.getToxic() >= MAXPOTIONTOXICITY){
             player.sendMessage("Max toxicity reached");
             craft(location,player);
             return;
@@ -130,10 +137,16 @@ public class RecipeManager {
         Print(potion);
     }
 
-    public static void EmptyOut(Location location) {
-        cauldronContents.remove(location);
-        cauldronPotions.remove(location);
-        DisplayManager.Delete(location);
-
+    public static void EmptyOut(Location location, Player player) {
+        UUID uuid = player.getUniqueId();
+        Map<UUID, List<Ingredient>> contents = cauldronContents.get(location);
+        if(contents != null){
+            contents.remove(uuid);
+        }
+        Map<UUID, CraftingPotion> potions = cauldronPotions.get(location);
+        if(potions != null){
+            potions.remove(uuid);
+        }
+        DisplayManager.Delete(location,player);
     }
 }

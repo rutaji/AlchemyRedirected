@@ -35,6 +35,7 @@ public enum InstantEffectType implements EffectType {
         @Override
         public void applyInstant(Player player, int amplifier) {
             for(int i = 0; i <= amplifier ; i++  ) {
+                player.clearActivePotionEffects();
                 EffectManager.clense(player);
             }
         }

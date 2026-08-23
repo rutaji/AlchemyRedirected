@@ -28,7 +28,7 @@ public class IngredientLoader {
         this.plugin = plugin;
     }
 
-    public void loadAll() {
+    public int loadAll() {
         File file = new File(plugin.getDataFolder(), "ingredients.yml");
         if (!file.exists()) {
             plugin.saveResource("ingredients.yml", false); // copies from src/main/resources if bundled
@@ -39,15 +39,18 @@ public class IngredientLoader {
         EffectManager.BASE_DURATION = config.getInt("baseDuration", EffectManager.BASE_DURATION);
         EffectManager.LEVEL_DURATION = config.getInt("levelDuration", EffectManager.LEVEL_DURATION);
         EffectManager.LEVEL_DURATION_UNAFFECTED_BY_LEVELS = config.getInt("levelDurationUnaffectedByLevels", EffectManager.LEVEL_DURATION_UNAFFECTED_BY_LEVELS);
+        RecipeManager.MAXPOTIONTOXICITY = config.getInt("maxPotionToxicity", RecipeManager.MAXPOTIONTOXICITY);
         RecipeManager.MAXTOXICITY = config.getInt("maxToxicity", RecipeManager.MAXTOXICITY);
+
         CustomEffectsCode.LIFESTEAL_PER_LEVEL = config.getDouble("lifestealPerLevel", CustomEffectsCode.LIFESTEAL_PER_LEVEL);
         CustomEffectsCode.BOMB_POWER_PER_LEVEL = (float) config.getDouble("bombPowerPerLevel", CustomEffectsCode.BOMB_POWER_PER_LEVEL);
+
 
         ConfigurationSection section = config.getConfigurationSection("ingredients");
 
         if (section == null) {
             plugin.getLogger().warning("No 'ingredients' section found in ingredients.yml");
-            return;
+            return 0;
         }
 
         for (String key : section.getKeys(false)) {
@@ -85,7 +88,9 @@ public class IngredientLoader {
             register(material, toxicity, loreLevel, effects.toArray(new IngredientEffect[0]),exp);
         }
 
-        plugin.getLogger().info("Loaded " + section.getKeys(false).size() + " ingredients from config.");
+        int count = section.getKeys(false).size();
+        plugin.getLogger().info("Loaded " + count + " ingredients from config.");
+        return count;
     }
 
     private void register(Material material, int toxicity, int loreLevel, IngredientEffect[] effects,double exp) {

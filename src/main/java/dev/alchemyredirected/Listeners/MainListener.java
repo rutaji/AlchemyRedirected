@@ -10,6 +10,7 @@ import dev.alchemyredirected.customEffects.CustomEffectsCode;
 import dev.alchemyredirected.customEffects.EffectManager;
 import dev.alchemyredirected.customEffects.EffectValues;
 import dev.alchemyredirected.helpers.ParticleUtil;
+import dev.alchemyredirected.recipie.CraftingPotion;
 import dev.alchemyredirected.recipie.DisplayManager;
 import dev.alchemyredirected.recipie.RecipeManager;
 import net.kyori.adventure.text.Component;
@@ -30,6 +31,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -40,7 +42,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import static dev.alchemyredirected.AlchemyRedirected.Print;
 import static dev.alchemyredirected.PersistentData.TagHelper.getToxicity;
 import static dev.alchemyredirected.Toxicity.ToxicityManager.toxicityDeaths;
-import static dev.alchemyredirected.recipie.RecipeManager.cauldronContents;
 
 public class MainListener implements Listener {
 
@@ -91,7 +92,7 @@ public class MainListener implements Listener {
         Location location = block.getLocation();
 
         Player player = event.getPlayer();
-        if(RecipeManager.IsEmpty(location)){
+        if(RecipeManager.IsEmpty(location, player)){
             player.sendMessage(SendEmptyMessage());
             return;
         }

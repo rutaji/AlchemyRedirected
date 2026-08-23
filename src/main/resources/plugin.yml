@@ -2,10 +2,18 @@ name: AlchemyRedirected
 version: '${version}'
 main: dev.alchemyredirected.AlchemyRedirected
 api-version: '1.21'
-author: YourName
+author: rutaji
 description: An empty Paper plugin project.
 depend: [PlaceholderAPI,AuraSkills]
 commands:
   Ingredients:
     description: bruh
     usage: /Ingredients
+  alchemyredirected:
+    description: Alchemy Redirected admin commands
+    usage: /alchemyredirected reload
+    permission: alchemyredirected.reload
+permissions:
+  alchemyredirected.reload:
+    description: Allows reloading ingredients.yml
+    default: op
