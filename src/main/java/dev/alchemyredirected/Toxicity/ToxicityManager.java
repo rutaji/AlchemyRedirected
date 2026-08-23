@@ -14,18 +14,33 @@ import java.util.UUID;
 public class ToxicityManager {
 
 
-    public static HashMap<UUID,Integer> ToxicityPerPlayer = new HashMap<>();
+    public static HashMap<UUID,ToxicityTimestamp> ToxicityPerPlayer = new HashMap<>();
+
+    public static final double TOXICITYPERSECOND = 0.002;
 
     public static final Set<UUID> toxicityDeaths = new HashSet<>();
 
     public static void add(Player player, Integer integer) {
-        AlchemyRedirected.instance.getLogger().info(integer + "bruhhhhg");
         UUID uuid = player.getUniqueId();
-        int  newToxic = ToxicityPerPlayer.getOrDefault(uuid,0) + integer;
+        int currentToxicity = get(player) + integer;
+        ToxicityTimestamp newToxic = new ToxicityTimestamp(player.getWorld().getGameTime(),currentToxicity) ;
         ToxicityPerPlayer.put(uuid,newToxic);
-        effect(player,newToxic);
+        ontoxicityIncreased(player,currentToxicity);
     }
-    public static void effect(Player player,int amount){
+
+    public static void reset(Player player) {
+        ToxicityPerPlayer.remove(player.getUniqueId());
+    }
+    public static int get(Player player){
+        UUID uuid = player.getUniqueId();
+        if(!ToxicityPerPlayer.containsKey(uuid)){return 0;}
+        ToxicityTimestamp toxicityTimestamp = ToxicityPerPlayer.get(uuid);
+        long since =  player.getWorld().getGameTime() - toxicityTimestamp.timestamp();
+        return (int)Math.ceil(Math.max(toxicityTimestamp.toxicity() - since*TOXICITYPERSECOND,0));
+
+    }
+
+    public static void ontoxicityIncreased(Player player,int amount){
         if(amount > 100){
             player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,20*60*3,2));
         }
@@ -33,12 +48,5 @@ public class ToxicityManager {
             toxicityDeaths.add(player.getUniqueId());
             player.kill();
         }
-    }
-
-    public static void reset(Player player) {
-        ToxicityPerPlayer.put(player.getUniqueId(),0);
-    }
-    public static int get(Player player){
-        return ToxicityPerPlayer.getOrDefault(player.getUniqueId(),0);
     }
 }

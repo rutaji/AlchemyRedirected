@@ -35,15 +35,12 @@ public class AlchemyPlaceholders extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, @NonNull String params) {
         if (player == null) return "";
-        Print(params);
         if (params.equals("LIFESTEAL_duration")) {
             String s = TextUtil.ticksToTime((int) EffectManager.getDuration(player, CustomEffectType.LIFESTEAL));
-            Print(s);
             return s;
         }
         if(params.equals("BOMB_duration")){
             String s = TextUtil.ticksToTime((int) EffectManager.getDuration(player, CustomEffectType.BOMB));
-            Print(s);
             return s;
         }
         if(params.equals("toxicity")){

@@ -2,6 +2,7 @@ package dev.alchemyredirected.customEffects;
 
 import dev.alchemyredirected.AlchemyRedirected;
 import dev.alchemyredirected.PersistentData.TagHelper;
+import dev.alchemyredirected.Toxicity.ToxicityManager;
 import dev.alchemyredirected.helpers.FightUtil;
 import dev.alchemyredirected.helpers.ParticleUtil;
 import net.kyori.adventure.text.Component;
@@ -29,7 +30,16 @@ public enum InstantEffectType implements EffectType {
                 ParticleUtil.smokeBomb(player.getLocation().clone().add(ThreadLocalRandom.current().nextDouble(-1.0,1.0),ThreadLocalRandom.current().nextDouble(-1.0,1.0),ThreadLocalRandom.current().nextDouble(-1.0,1.0)));
             }
         }
+    },
+    CLEANSE("CLEANSE", Component.text("Cleanse", TextColor.color(54, 205, 205)), Color.fromRGB(54, 205, 205), PotionEffectType.Category.NEUTRAL) {
+        @Override
+        public void applyInstant(Player player, int amplifier) {
+            for(int i = 0; i <= amplifier ; i++  ) {
+                EffectManager.clense(player);
+            }
+        }
     };
+
 
 
     private final String id;

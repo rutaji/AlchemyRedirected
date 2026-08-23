@@ -1,6 +1,7 @@
 package dev.alchemyredirected.customEffects;
 
 import dev.alchemyredirected.PersistentData.TagHelper;
+import dev.alchemyredirected.Toxicity.ToxicityManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -68,7 +69,12 @@ public class EffectManager {
         }
 
     }
-    public static void deleteEffects(Player player){
+    public static void clense(Player player){
+        deleteEffects(player);
+        ToxicityManager.reset(player);
+    }
+
+    private static void deleteEffects(Player player){
         HashMap<EffectType, EffectValues> playerEffects = effectPerPlayer.remove(player.getUniqueId());
         if(playerEffects == null){return;}
         for(var entry : playerEffects.entrySet()){

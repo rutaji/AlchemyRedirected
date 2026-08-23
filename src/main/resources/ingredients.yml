@@ -53,6 +53,14 @@ ingredients:
       - type: BOMB
         value: 50
         max: 7
+  MILK_BUCKET:
+    toxicity: 5
+    loreLevel: 1
+    exp: 23
+    effects:
+      - type: CLEANSE
+        value: 25
+        max: 1
 baseDuration: 3600
 levelDuration: 600
 levelDurationUnaffectedByLevels: 2400
