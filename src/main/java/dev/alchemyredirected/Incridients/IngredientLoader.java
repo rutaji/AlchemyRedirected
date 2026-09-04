@@ -1,12 +1,17 @@
 package dev.alchemyredirected.Incridients;
 
+import dev.alchemyredirected.AlchemyRedirected;
 import dev.alchemyredirected.customEffects.CustomEffectsCode;
 import dev.alchemyredirected.customEffects.CustomEffectType;
 import dev.alchemyredirected.customEffects.EffectManager;
 import dev.alchemyredirected.customEffects.EffectType;
 import dev.alchemyredirected.customEffects.InstantEffectType;
 import dev.alchemyredirected.customEffects.VanillaEffectType;
+import dev.alchemyredirected.exp.AuraUtil;
+import dev.alchemyredirected.exp.ExpManager;
+import dev.alchemyredirected.exp.MnoCoreUtil;
 import dev.alchemyredirected.recipie.RecipeManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,6 +50,13 @@ public class IngredientLoader {
         CustomEffectsCode.LIFESTEAL_PER_LEVEL = config.getDouble("lifestealPerLevel", CustomEffectsCode.LIFESTEAL_PER_LEVEL);
         CustomEffectsCode.BOMB_POWER_PER_LEVEL = (float) config.getDouble("bombPowerPerLevel", CustomEffectsCode.BOMB_POWER_PER_LEVEL);
 
+        String expSetting = config.getString("expMod","none");
+        if(expSetting.equals("AuraSkills") && Bukkit.getPluginManager().getPlugin("AuraSkills") != null){
+            ExpManager.SetAdapter(new AuraUtil());
+        } else if (expSetting.equals("MMOCore") && Bukkit.getPluginManager().getPlugin("MMOCore") != null) {
+            ExpManager.SetAdapter(new MnoCoreUtil());
+        }
+
 
         ConfigurationSection section = config.getConfigurationSection("ingredients");
 
@@ -54,6 +66,7 @@ public class IngredientLoader {
         }
 
         for (String key : section.getKeys(false)) {
+            AlchemyRedirected.Print(key);
             Material material = Material.matchMaterial(key);
             if (material == null) {
                 plugin.getLogger().warning("Unknown material in ingredients.yml: " + key);
@@ -71,6 +84,7 @@ public class IngredientLoader {
 
             for (Map<?, ?> effectMap : effectMaps) {
                 String typeName = (String) effectMap.get("type");
+
 
                 EffectType effectType = EffectFromString(typeName);
                 if (effectType == null) {

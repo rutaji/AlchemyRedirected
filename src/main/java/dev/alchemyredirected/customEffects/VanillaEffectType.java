@@ -12,6 +12,7 @@ import java.util.Set;
 import static dev.alchemyredirected.customEffects.EffectManager.*;
 
 public class VanillaEffectType implements EffectType {
+
     private static final Set<PotionEffectType> UNAFFECTED_BY_LEVELS = Set.of(
             PotionEffectType.NIGHT_VISION,
             PotionEffectType.INVISIBILITY,
@@ -74,5 +75,19 @@ public class VanillaEffectType implements EffectType {
                 true     // show icon
         );
         meta.addCustomEffect(effect, true); // true = overwrite existing effect of same type
+    }
+    @Override
+    public int hashCode(){
+        return  potionEffectType.hashCode();
+    }
+    @Override
+    public boolean equals(Object other){
+        if (other instanceof VanillaEffectType vanillaEffectType){
+            return vanillaEffectType.potionEffectType == this.potionEffectType;
+        }
+        if(other instanceof PotionEffectType potionEffectType){
+            return potionEffectType == this.potionEffectType;
+        }
+        return false;
     }
 }

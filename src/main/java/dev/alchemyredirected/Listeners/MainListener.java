@@ -111,7 +111,7 @@ public class MainListener implements Listener {
 
         EffectManager.drink(player,item);
         EffectManager.applyInstant(player,item);
-        ToxicityManager.add(player,toxic.get());//todo mozna tohle prohodit na konec aby nemohl dostat effekt z toxicity kterou uz nema
+        ToxicityManager.add(player,toxic.get());
     }
 
     @EventHandler
@@ -142,11 +142,11 @@ public class MainListener implements Listener {
 
     @EventHandler
     public void onPotionEffectClear(EntityPotionEffectEvent event) {
-        Print("onpotionclar");
         if (!(event.getEntity() instanceof Player player)) return;
         Print("action " + event.getAction() + "  bruh");
         if (event.getAction() == EntityPotionEffectEvent.Action.CLEARED) {
             EffectManager.clense(player);
+            return;
         }
     }
 

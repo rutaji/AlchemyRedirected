@@ -1,11 +1,12 @@
 package dev.alchemyredirected.Incridients;
 
-import dev.alchemyredirected.aura.AuraUtil;
+import dev.alchemyredirected.exp.AuraUtil;
+import dev.alchemyredirected.exp.ExpManager;
 import dev.alchemyredirected.recipie.CraftingPotion;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import static dev.alchemyredirected.AlchemyRedirected.Print;
 
 public class Ingredient {
     public static final int STO = 100;
@@ -40,23 +41,22 @@ public class Ingredient {
         aplytoxic(potion,player);
     }
     public void aplytoxic(CraftingPotion potion,Player player){
-        int level = AuraUtil.getAlchemyLevel(player);
+        int level = ExpManager.getLevel(player);
         int discountedToxicity = Math.max((int)(getToxicity() * (100 - level) * DISCOUNT_MODIFIER),1);
         potion.setToxic(potion.getToxic() + discountedToxicity);
     }
 
-    public boolean AddEffect(CraftingPotion potion,IngredientEffect effect,int modifier){
+    public void AddEffect(CraftingPotion potion,IngredientEffect effect,int modifier){
          int old = potion.effects.getOrDefault(effect.effect(),0);
-         int buffed = Math.min(old + effect.value() * modifier,effect.max() * STO);
-         if(old < buffed){
-             potion.effects.put(effect.effect(),buffed);
-             return true;
-         }
-         return false;
-
+         Print("old " + old);
+         int toMax = Math.max(effect.max() * STO - old,0);
+         Print("tomax " + toMax);
+         int tobuff = Math.min(effect.value() * modifier,toMax);//todo test
+         Print("tobuff " + tobuff);
+         potion.effects.put(effect.effect(),Math.max(old + tobuff,0));
     }
     public boolean IsUnlocked(Player player){
-        return AuraUtil.getAlchemyLevel(player) >= loreLevel;
+        return ExpManager.getLevel(player) >= loreLevel;
     }
 
 }

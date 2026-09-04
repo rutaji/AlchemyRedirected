@@ -3,11 +3,12 @@ version: '${version}'
 main: dev.alchemyredirected.AlchemyRedirected
 api-version: '1.21'
 author: rutaji
-description: An empty Paper plugin project.
-depend: [PlaceholderAPI,AuraSkills]
+description: Throw ingredients into cauldron to craft potions with multiple effects.
+depend: [PlaceholderAPI]
+softdepend: [MMOCore,AuraSkills]
 commands:
   Ingredients:
-    description: bruh
+    description: Shows gui with all ingredients
     usage: /Ingredients
   alchemyredirected:
     description: Alchemy Redirected admin commands

@@ -24,8 +24,8 @@ public class ToxicityManager {
     public static void add(Player player, Integer integer) {
         UUID uuid = player.getUniqueId();
         int currentToxicity = get(player) + integer;
-        ToxicityTimestamp newToxic = new ToxicityTimestamp(player.getWorld().getGameTime(),currentToxicity) ;
-        ToxicityPerPlayer.put(uuid,newToxic);
+        ToxicityTimestamp currentToxicityTimestamp = new ToxicityTimestamp(player.getWorld().getGameTime(),currentToxicity) ;
+        ToxicityPerPlayer.put(uuid,currentToxicityTimestamp);
         ontoxicityIncreased(player,currentToxicity);
     }
 

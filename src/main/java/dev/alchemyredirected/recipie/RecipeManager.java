@@ -3,8 +3,9 @@ package dev.alchemyredirected.recipie;
 import dev.alchemyredirected.AlchemyRedirected;
 import dev.alchemyredirected.Incridients.Ingredient;
 import dev.alchemyredirected.PersistentData.TagHelper;
-import dev.alchemyredirected.aura.AuraUtil;
+import dev.alchemyredirected.exp.AuraUtil;
 import dev.alchemyredirected.customEffects.EffectType;
+import dev.alchemyredirected.exp.ExpManager;
 import dev.alchemyredirected.helpers.ParticleUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -63,7 +64,7 @@ public class RecipeManager {
         for(Ingredient ingredient : uniqueByReference){
             exp += ingredient.exp;
         }
-        AuraUtil.GiveAlchemyEXP(player,  exp * penalty);
+        ExpManager.addExp(player,  exp * penalty);
     }
 
     public static void register(Material item,Ingredient ingredient){

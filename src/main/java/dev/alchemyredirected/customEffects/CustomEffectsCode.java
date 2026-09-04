@@ -3,6 +3,7 @@ package dev.alchemyredirected.customEffects;
 import dev.alchemyredirected.AlchemyRedirected;
 import dev.alchemyredirected.helpers.FightUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -32,7 +33,11 @@ public class CustomEffectsCode {
         UUID uuid = player.getUniqueId();
         BukkitTask task = Bukkit.getScheduler().runTaskLater(
                 AlchemyRedirected.instance,
-                () -> FightUtil.Explosion(player.getLocation(),BOMB_POWER_PER_LEVEL*(amplifier+1)),
+                () -> {
+                    if(!player.isOnline()){return;}//todo this is temporary, dont store player object
+                    Location location = player.getLocation();
+                    location.getWorld().createExplosion(location,BOMB_POWER_PER_LEVEL*(amplifier+1));
+                },
                 duration
         );
         BukkitTask oldTask = bombTask.get(uuid);

@@ -5,37 +5,37 @@ ingredients:
     exp: 6
     effects:
       - type: NIGHT_VISION
-        value: 20
-        max: 1
+        value: 38
+        max: 3
       - type: SATURATION
-        value: 9
+        value: 15
         max: 1
   GOLDEN_CARROT:
-    toxicity: 12
+    toxicity: 18
     loreLevel: 12
     exp: 67
     effects:
       - type: NIGHT_VISION
         value: 40
-        max: 3
+        max: 4
       - type: SATURATION
         value: 60
         max: 2
   POTATO:
-    toxicity: 30
+    toxicity: 6
     loreLevel: 1
     exp: 67
     effects:
       - type: LIFESTEAL
-        value: 60
-        max: 3
-      - type: SATURATION
-        value: 60
+        value: 7
+        max: 1
+      - type: HEALTH_BOOST
+        value: 21
         max: 2
   COAL:
-    toxicity: 30
+    toxicity: 12
     loreLevel: 1
-    exp: 67
+    exp: 15
     effects:
       - type: SMOKE
         value: 50
@@ -48,6 +48,9 @@ ingredients:
       - type: BOMB
         value: 50
         max: 7
+      - type: STRENGTH
+        value: 26
+        max: 2
   MILK_BUCKET:
     toxicity: 5
     loreLevel: 1
@@ -56,6 +59,243 @@ ingredients:
       - type: CLEANSE
         value: 25
         max: 1
+      - type: REGENERATION
+        value: 36
+        max: 8
+  APPLE:
+    toxicity: 7
+    loreLevel: 2
+    exp: 5
+    effects:
+      - type: REGENERATION
+        value: 15
+        max: 2
+      - type: SATURATION
+        value: 10
+        max: 1
+  GOLDEN_APPLE:
+    toxicity: 12
+    loreLevel: 15
+    exp: 90
+    effects:
+      - type: ABSORPTION
+        value: 53
+        max: 4
+      - type: REGENERATION
+        value: 34
+        max: 4
+      - type: FIRE_RESISTANCE
+        value: 25
+        max: 1
+  ENCHANTED_GOLDEN_APPLE:
+    toxicity: 11
+    loreLevel: 30
+    exp: 250
+    effects:
+      - type: ABSORPTION
+        value: 138
+        max: 5
+      - type: REGENERATION
+        value: 158
+        max: 6
+      - type: RESISTANCE
+        value: 50
+        max: 3
+      - type: FIRE_RESISTANCE
+        value: 50
+        max: 1
+  BREAD:
+    toxicity: 3
+    loreLevel: 1
+    exp: 3
+    effects:
+      - type: SATURATION
+        value: 15
+        max: 1
+  COOKIE:
+    toxicity: 1
+    loreLevel: 3
+    exp: 3
+    effects:
+      - type: SPEED
+        value: 3
+        max: 1
+      - type: JUMP_BOOST
+        value: 4
+        max: 1
+  SUGAR:
+    toxicity: 8
+    loreLevel: 4
+    exp: 8
+    effects:
+      - type: SPEED
+        value: 20
+        max: 3
+  GLOW_BERRIES:
+    toxicity: 5
+    loreLevel: 6
+    exp: 9
+    effects:
+      - type: GLOWING
+        value: 25
+        max: 1
+      - type: NIGHT_VISION
+        value: 15
+        max: 1
+  HONEY_BOTTLE:
+    toxicity: 9
+    loreLevel: 8
+    exp: 20
+    effects:
+      - type: CLEANSE
+        value: 10
+        max: 1
+      - type: REGENERATION
+        value: 35
+        max: 2
+      - type: HASTE
+        value: 16
+        max: 1
+  HONEYCOMB:
+    toxicity: 3
+    loreLevel: 7
+    exp: 10
+    effects:
+      - type: RESISTANCE
+        value: 12
+        max: 1
+  DRIED_KELP:
+    toxicity: 3
+    loreLevel: 5
+    exp: 4
+    effects:
+      - type: WATER_BREATHING
+        value: 15
+        max: 2
+      - type: SATURATION
+        value: 2
+        max: 1
+  CHORUS_FRUIT:
+    toxicity: 4
+    loreLevel: 10
+    exp: 15
+    effects:
+      - type: SLOW_FALLING
+        value: 31
+        max: 3
+      - type: NAUSEA
+        value: 15
+        max: 1
+  CACTUS:
+    toxicity: 3
+    loreLevel: 3
+    exp: 5
+    effects:
+      - type: POISON
+        value: 18
+        max: 1
+      - type: WEAKNESS
+        value: 8
+        max: 2
+      - type: STRENGTH
+        value: 15
+        max: 3
+  NETHER_WART:
+    toxicity: 6
+    loreLevel: 8
+    exp: 15
+    effects:
+      - type: STRENGTH
+        value: 15
+        max: 2
+      - type: FIRE_RESISTANCE
+        value: 10
+        max: 1
+  BLUE_ORCHID:
+    toxicity: 4
+    loreLevel: 4
+    exp: 5
+    effects:
+      - type: WATER_BREATHING
+        value: 15
+        max: 1
+  ROTTEN_FLESH:
+    toxicity: 4
+    loreLevel: 2
+    exp: 3
+    effects:
+      - type: HUNGER
+        value: 20
+        max: 2
+      - type: WEAKNESS
+        value: 10
+        max: 2
+      - type: INSTANT_HEALTH
+        value: 12
+        max: 5
+  SPIDER_EYE:
+    toxicity: 6
+    loreLevel: 6
+    exp: 10
+    effects:
+      - type: POISON
+        value: 20
+        max: 2
+      - type: WEAVING
+        value: 47
+        max: 1
+  SLIME_BALL:
+    toxicity: 8
+    loreLevel: 6
+    exp: 10
+    effects:
+      - type: SLOW_FALLING
+        value: 20
+        max: 1
+      - type: JUMP_BOOST
+        value: 15
+        max: 1
+  PRISMARINE_CRYSTALS:
+    toxicity: 8
+    loreLevel: 12
+    exp: 24
+    effects:
+      - type: WATER_BREATHING
+        value: 25
+        max: 2
+  INK_SAC:
+    toxicity: 10
+    loreLevel: 5
+    exp: 8
+    effects:
+      - type: BLINDNESS
+        value: 20
+        max: 2
+  GLOW_INK_SAC:
+    toxicity: 8
+    loreLevel: 7
+    exp: 12
+    effects:
+      - type: GLOWING
+        value: 25
+        max: 1
+      - type: BLINDNESS
+        value: 10
+        max: 1
+  NETHER_STAR:
+    toxicity: 90
+    loreLevel: 35
+    exp: 300
+    effects:
+      - type: RESISTANCE
+        value: 100
+        max: 8
+      - type: ABSORPTION
+        value: 100
+        max: 8
+      - type: REGENERATION
+        value: 100
+        max: 8
 baseDuration: 3600
 levelDuration: 600
 levelDurationUnaffectedByLevels: 2400
@@ -63,3 +303,4 @@ lifestealPerLevel: 0.1
 bombPowerPerLevel: 3.0
 maxPotionToxicity: 100
 maxToxicity: 200
+expMod: MMOCore

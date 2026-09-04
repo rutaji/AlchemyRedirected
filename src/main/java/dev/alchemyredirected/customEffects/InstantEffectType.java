@@ -95,4 +95,5 @@ public enum InstantEffectType implements EffectType {
         }
         return Optional.empty();
     }
+
 }

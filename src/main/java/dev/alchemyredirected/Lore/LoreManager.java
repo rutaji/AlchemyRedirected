@@ -3,7 +3,8 @@ package dev.alchemyredirected.Lore;
 import dev.alchemyredirected.Incridients.Ingredient;
 import dev.alchemyredirected.Incridients.IngredientEffect;
 import dev.alchemyredirected.PersistentData.TagHelper;
-import dev.alchemyredirected.aura.AuraUtil;
+import dev.alchemyredirected.exp.AuraUtil;
+import dev.alchemyredirected.exp.ExpManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -21,7 +22,7 @@ public class LoreManager {
     public static void UpdateItemStack(ItemStack stack, Player player, Ingredient ingredient) {
         ItemMeta meta = stack.getItemMeta();
         if (meta.getPersistentDataContainer().has(TagHelper.INGREDIENT_LORE_KEY, PersistentDataType.BOOLEAN)) {
-            if (AuraUtil.getAlchemyLevel(player) < ingredient.loreLevel) {
+            if (ExpManager.getLevel(player) < ingredient.loreLevel) {
                 removeAlchemyLore(meta, ingredient);
                 stack.setItemMeta(meta);
             }
@@ -32,7 +33,7 @@ public class LoreManager {
         List<Component> lore = meta.hasLore() ? meta.lore() : new ArrayList<>();
         MarkIngridient(lore);
 
-        if(AuraUtil.getAlchemyLevel(player) >= ingredient.loreLevel)
+        if(ExpManager.getLevel(player) >= ingredient.loreLevel)
         {
             meta.lore(getLore(ingredient,lore));
         }

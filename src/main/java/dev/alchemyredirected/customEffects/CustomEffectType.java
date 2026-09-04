@@ -28,7 +28,6 @@ public enum CustomEffectType implements EffectType {
             CustomEffectsCode.bombClear(player);
         }
     };
-    protected BukkitTask task;
     private final String id;
     private final Component displayName;
     private final Color color;
